@@ -1,0 +1,25 @@
+version: '3.1'
+
+networks:
+  testnetwork:
+    driver: bridge
+
+services:
+
+  ## сервис контейнер для эмуляции обращений к внешнему апи
+  container-stub:
+    container_name: container-stub
+    build: .docker/stubs
+    entrypoint: ["sh", "entrypoint.sh"]
+    networks:
+      - testnetwork
+
+  ## сервис-контейнер для вашего кода. 
+  ## При необходимости донастройте его по вашим потребностям
+  container-testcase:
+    container_name: container-testcase
+    build: .docker/testcase
+    volumes:
+      - ./src:/var/www/html:rw
+    networks:
+      - testnetwork
